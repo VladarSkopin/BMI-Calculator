@@ -1,6 +1,5 @@
 import 'package:bmi_calculator/components/bmi_calculation.dart';
 import 'package:flutter/material.dart';
-//import 'package:page_transition/page_transition.dart';
 import 'package:just_audio/just_audio.dart';
 
 
@@ -42,7 +41,7 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    double _screenWidth = MediaQuery.of(context).size.width / 2.8;
+    double screenWidth = MediaQuery.of(context).size.width / 3;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(title: const Text('BMI Awesome Calculator')),
@@ -59,7 +58,7 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
           ),
           child: ListView(
             children: [
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
@@ -71,7 +70,7 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                       fontSize: 18),
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 80.0),
                 child: TextFormField(
@@ -90,7 +89,7 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                   cursorColor: Colors.purple,
                   cursorWidth: 1.8,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.w600
@@ -113,7 +112,7 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                   }
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 80.0),
                 child: TextFormField(
@@ -132,7 +131,7 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                   cursorColor: Colors.purple,
                   cursorWidth: 1.8,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.w600
@@ -151,9 +150,9 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                   textInputAction: TextInputAction.done,
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: _screenWidth),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth),
                 child: MaterialButton(
                   onPressed: () async {
                     /*
@@ -204,7 +203,7 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Text('$_bmiOutput'
                   '\n$_verdict',
                   style: TextStyle(
