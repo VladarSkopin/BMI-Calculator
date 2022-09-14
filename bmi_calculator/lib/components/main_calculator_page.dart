@@ -19,26 +19,30 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
   String _bmiOutput = "";
   String _verdict = "";
 
+  late final FocusNode _heightFocusNode;
 
-  late AudioPlayer player;
+  late AudioPlayer _player;
   String _btnSnd = 'assets/btn_snd.mp3';
   bool _isError = false;
 
   @override
   void initState() {
+    _player = AudioPlayer();
+    _heightFocusNode = FocusNode();
     super.initState();
-    player = AudioPlayer();
   }
 
   @override
   void dispose() {
-    player.dispose();
+    _player.dispose();
+    _heightFocusNode.dispose();
     super.dispose();
   }
 
 
   @override
   Widget build(BuildContext context) {
+    double _screenWidth = MediaQuery.of(context).size.width / 2.8;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(title: const Text('BMI Awesome Calculator')),
@@ -53,9 +57,9 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
               end: Alignment.bottomCenter
             )
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: ListView(
             children: [
+              SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
@@ -67,9 +71,10 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                       fontSize: 18),
                 ),
               ),
+              SizedBox(height: 40),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                child: TextField(
+                padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                child: TextFormField(
                   onChanged: (text) {
                     setState(() {
                       _isError = false;
@@ -102,11 +107,17 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
 
                     )
                   ),
+                  textInputAction: TextInputAction.go,
+                  onFieldSubmitted: (_) {
+                    FocusScope.of(context).requestFocus(_heightFocusNode);
+                  }
                 ),
               ),
+              SizedBox(height: 40),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                child: TextField(
+                padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                child: TextFormField(
+                  focusNode: _heightFocusNode,
                   onChanged: (text) {
                     setState(() {
                       _isError = false;
@@ -135,67 +146,73 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                       fillColor: Colors.grey[800],
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-
                       )
+                  ),
+                  textInputAction: TextInputAction.done,
+                ),
+              ),
+              SizedBox(height: 40),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: _screenWidth),
+                child: MaterialButton(
+                  onPressed: () async {
+                    /*
+                    Navigator.pushReplacement(context, PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      duration: Duration(milliseconds: 600),
+                      child: SecondCalculatorPage(),
+                    ));
+                     */
+
+                    setState(() {
+                      _bmiResult = BmiCalculation.calculateBmiIndex(_weight, _height);
+                      _bmiResult = double.parse((_bmiResult).toStringAsFixed(2));
+                      _verdict = BmiCalculation.calculateBmiVerdict(_bmiResult);
+                      _bmiOutput = 'BMI: $_bmiResult';
+                      if (_weight <= 0 || _height <= 0) {
+                        _isError = true;
+                        _bmiOutput = "Unknown BMI Index";
+                        _verdict = "Unknown result";
+                      } else {
+                        _isError = false;
+                      }
+                      if (_isError) {
+                        _btnSnd = "assets/btn_error.mp3";
+                      } else {
+                        _btnSnd = "assets/btn_snd.mp3";
+                      }
+                    });
+
+                    if (_player.playing) {
+                      _player.stop();
+                    }
+                    await _player.setAsset(_btnSnd);
+                    _player.play();
+
+                  },
+                  color: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7)
+                  ),
+                  elevation: 6.0,
+                  child: const Text(
+                    'ENTER',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 24),
                   ),
                 ),
               ),
-              MaterialButton(
-                onPressed: () async {
-                  /*
-                  Navigator.pushReplacement(context, PageTransition(
-                    type: PageTransitionType.rightToLeft,
-                    duration: Duration(milliseconds: 600),
-                    child: SecondCalculatorPage(),
-                  ));
-                   */
-
-                  setState(() {
-                    _bmiResult = BmiCalculation.calculateBmiIndex(_weight, _height);
-                    _bmiResult = double.parse((_bmiResult).toStringAsFixed(2));
-                    _verdict = BmiCalculation.calculateBmiVerdict(_bmiResult);
-                    _bmiOutput = 'BMI: $_bmiResult';
-                    if (_weight <= 0 || _height <= 0) {
-                      _isError = true;
-                      _bmiOutput = "Unknown BMI Index";
-                      _verdict = "Unknown result";
-                    } else {
-                      _isError = false;
-                    }
-                    if (_isError) {
-                      _btnSnd = "assets/btn_error.mp3";
-                    } else {
-                      _btnSnd = "assets/btn_snd.mp3";
-                    }
-                  });
-
-                  if (player.playing) {
-                    player.stop();
-                  }
-                  await player.setAsset(_btnSnd);
-                  player.play();
-
-                },
-                color: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(7)
-                ),
-                elevation: 6.0,
-                child: const Text(
-                  'ENTER',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 24),
-                ),
-              ),
+              SizedBox(height: 40),
               Text('$_bmiOutput'
                   '\n$_verdict',
                   style: TextStyle(
                       color: Colors.red[600],
                       fontSize: 26,
                       fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.center),
+                  textAlign: TextAlign.center,
+              overflow: TextOverflow.fade),
               const SizedBox(height: 20)
             ],
           ),
