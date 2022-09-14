@@ -17,6 +17,7 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
   double _bmiResult = 0.0;
   String _bmiOutput = "";
   String _verdict = "";
+  bool _visible = false;
 
   late final FocusNode _heightFocusNode;
 
@@ -95,6 +96,7 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                     fontWeight: FontWeight.w600
                   ),
                   decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.fitness_center_rounded),
                     hintText: 'Weight (kg)',
                     hintStyle: TextStyle(
                       color: Colors.grey[500]
@@ -103,8 +105,21 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                     fillColor: Colors.grey[800],
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-
-                    )
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide(
+                        color: Colors.purple[300]!,
+                        width: 4
+                      )
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: const BorderSide(
+                            color: Colors.black,
+                            width: 4
+                        )
+                    ),
                   ),
                   textInputAction: TextInputAction.go,
                   onFieldSubmitted: (_) {
@@ -137,6 +152,8 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                       fontWeight: FontWeight.w600
                   ),
                   decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.man),
+                      prefixIconColor: Colors.purpleAccent,
                       hintText: 'Height (cm)',
                       hintStyle: TextStyle(
                           color: Colors.grey[500]
@@ -145,7 +162,21 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                       fillColor: Colors.grey[800],
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                      )
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide(
+                              color: Colors.purple[300]!,
+                              width: 4
+                          )
+                      ),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: const BorderSide(
+                            color: Colors.black,
+                            width: 4
+                        )
+                    ),
                   ),
                   textInputAction: TextInputAction.done,
                 ),
@@ -162,6 +193,13 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                       child: SecondCalculatorPage(),
                     ));
                      */
+
+                    Future.delayed(Duration(milliseconds: 100), () {
+                      setState(() {
+                        _visible = false;
+                      });
+                    });
+
 
                     setState(() {
                       _bmiResult = BmiCalculation.calculateBmiIndex(_weight, _height);
@@ -188,6 +226,12 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                     await _player.setAsset(_btnSnd);
                     _player.play();
 
+                    Future.delayed(Duration(milliseconds: 100), () {
+                      setState(() {
+                        _visible = true;
+                      });
+                    });
+
                   },
                   color: Colors.black,
                   shape: RoundedRectangleBorder(
@@ -204,14 +248,18 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                 ),
               ),
               const SizedBox(height: 40),
-              Text('$_bmiOutput'
-                  '\n$_verdict',
-                  style: TextStyle(
-                      color: Colors.red[600],
-                      fontSize: 26,
-                      fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.center,
-              overflow: TextOverflow.fade),
+              AnimatedOpacity(
+                duration: Duration(milliseconds: 200),
+                opacity: _visible ? 1.0 : 0.0,
+                child: Text('$_bmiOutput'
+                    '\n$_verdict',
+                    style: TextStyle(
+                        color: Colors.red[600],
+                        fontSize: 26,
+                        fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
+                overflow: TextOverflow.fade),
+              ),
               const SizedBox(height: 20)
             ],
           ),
