@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.skopinusalexus.bmi_calculator">
    <application
-        android:label="bmi_calculator"
+        android:label="BMI Skopin Calculator"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
