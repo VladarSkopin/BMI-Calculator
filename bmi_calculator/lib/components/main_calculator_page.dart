@@ -122,7 +122,7 @@ class _MainCalculatorPageState extends State<MainCalculatorPage> {
                   cursorWidth: 1.8,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.blue[800],
+                    color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.w600
                   ),
